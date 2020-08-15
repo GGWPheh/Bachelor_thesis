@@ -1,0 +1,42 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+print "Content-type:text/html\n"
+print
+
+print "<pre>"
+
+import cgi
+import os
+import uuid
+import shelve
+
+from malib import *
+
+idsess=uuid.uuid1()
+donnees=cgi.FieldStorage()
+
+# ~ cgi.print_form(donnees)
+
+miningjob_OR_alignjob = donnees.getvalue("action")
+
+print """<form name="form2" action="action2" method=post enctype="multipart/form-data">"""
+print "Choissez un mot cle :"
+print """<input type="text" name="keyword" placeholder= "FILL THIS BOX">"""
+if (miningjob_OR_alignjob) == "alignjob" :
+	
+	print """<input type="file" name="fichier"> """
+	
+else:
+	print "Choissez un programme :"
+	print """
+	<input type="radio" id="ahmed" name="progdef" value="Gene"> Gene research
+	<input type="radio" id="cyril" name="progdef"  value="SNP" checked> SNP research"""
+	
+print """<input type="hidden" id="idsess" name="idsess" value="%s">"""%idsess
+findeformulaire()
+
+
+
+t=shelve.open("/tmp/%s.shelf"%idsess)
+t["miningjob_OR_alignjob"]=miningjob_OR_alignjob
+t["id"]=idsess
