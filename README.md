@@ -12,7 +12,8 @@ DEBRIEF :
 
 -J'arrive pas a régler le problème pour afficher les resultats de l'alignement. Mais sinon l'alignement fonctionne j'ai vérifié.
 
--En faisant des tests j'ai remarqué qu'il faut qu'on trouve une condition pour qu'il ne rajoute pas dans la database si elle existe déjà (fichier concerné : step1, step3, scriptml)
+-En faisant des tests j'ai remarqué qu'il faut qu'on trouve une condition pour qu'il ne rajoute pas dans la database si elle existe déjà (fichier concerné : step1, step3, scriptml) EDIT : j'ai réglé le problème chez moi, je pense que la solution peut s'appliquer aussi a ton script
+
 
 TACHES NECESSAIRE :
 
