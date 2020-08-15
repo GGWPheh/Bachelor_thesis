@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
+print("Content-type:text/html\n")
+print
 #  refreq.py
 #  
 #  Copyright 2020 root <root@Laptop Zehams & Kydae>
@@ -11,11 +13,10 @@ import entrezpy.conduit
 import sys
 import entrezpy.efetch.efetcher
 import os
-
 keyword=sys.argv[1]
 
 
-C=pymysql.connect(host="localhost",user="root",db="SNP_test",password="yy")
+C=pymysql.connect(host="localhost",user="root",db="SNP",password="yy")
 c=C.cursor()
 
 cmdverif="""show tables;"""
@@ -30,6 +31,13 @@ if keyword in verif_table :
 	print ("database already exist")
 
 else :
+	w = entrezpy.conduit.Conduit('email')
+	get_doc = w.new_pipeline() 
+	sid = get_doc.add_search({'db' : 'pubmed', 'term' : keyword , 'rettype' : 'count'})
+	get_doc.add_fetch({'db' : 'pubmed','retmode' : 'text', 'rettype' : 'medline'}, dependency=sid)	
+	print (" PUBMED : %s  !! TELECHAREMENT EN COURS !! "%keyword)
+	sys.stdout = open(keyfile, 'w')
+	analyzer = w.run(get_doc)
 	df = open("/tmp/%s.txt"%keyword,"r")
 	text=df.read()
 	posPmid=[]
