@@ -85,4 +85,12 @@ for key in data.keys():
     window text)
     engine=MyISAM;"""
    
+#ki="test"
+cmd = """CREATE TABLE IF NOT EXISTS %s (
+         course  VARCHAR(15),
+         student  VARCHAR(15),
+         teacher VARCHAR(15),
+         timeslot VARCHAR(15))
+         ENGINE=MyISAM;""" % (ki,)
+#c.execute(cmd)
 
