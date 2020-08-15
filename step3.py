@@ -101,15 +101,24 @@ for i in range(len(nameGene)):
 for i in NODE:
 	NODE[i]=sum(NODE[i])
 
+cmdtable="""CREATE TABLE IF NOT EXISTS %s_node(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name varchar(255),
+    freq INT,
+    nbnode INT,
+    score INT,
+    rel TEXT)
+    ENGINE=MyISAM;""" % (keyword)	
 
+c.execute(cmdtable)	
 
-cmdnode = """INSERT INTO node (name,freq,nbnode,score,rel) VALUES (%s,"%s","%s",%s,"%s") """
+cmdnode = """INSERT INTO """+str(keyword)+"""_node (name,freq,nbnode,score,rel) VALUES (%s,"%s","%s",%s,"%s") limit 3"""
 for key in DFG.keys():
 	score = DFG[key]*NODE[key]
 	c.execute(cmdnode,(key,DFG[key],NODE[key],score,LienNG[key]))
 	
-cmdgeneid = """INSERT INTO geneid (name,rel) VALUES (%s,"%s") """
-for key in DNG.keys():
-	c.execute(cmdgeneid,(key,DNG[key]))
+#cmdgeneid = """INSERT INTO geneid (name,rel) VALUES (%s,"%s") """
+#for key in DNG.keys():
+#	c.execute(cmdgeneid,(key,DNG[key]))
 print("Insert NODE succeed !!")
 print(time.time()-deb,"sec")
