@@ -105,7 +105,21 @@ for key in Dkeep.keys():
 info.close()
 
 
-cmddata = """INSERT INTO data (pmid,date,title,ab,author,location,oab,keyword) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) """
+cmdtable="""CREATE TABLE IF NOT EXISTS %s_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    pmid int,
+    date varchar(25),
+    title text,
+    ab text,
+    oab text,
+    author text,
+    location text,
+    keyword text)
+    engine=MyISAM;""" % (keyword)	
+
+c.execute(cmdtable)	
+
+cmddata = """INSERT INTO """+str(keyword)+"""_data (pmid,date,title,ab,author,location,oab,keyword) VALUES (%s,%s,%s,%s,%s,%s,%s,%s) """
 for key in Dkeep.keys():
 	c.execute(cmddata,(key,DATA[key][0],DATA[key][1],DATA[key][2],DATA[key][3],DATA[key][4],DATA[key][5],DATA[key][6]))
 
