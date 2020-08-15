@@ -57,8 +57,7 @@ for k in data.keys():
 	window=dchr.read(200)
 	data[k].append(window)
 	
-	
-cmdtable ="""create table %s(
+cmdtable="""CREATE TABLE IF NOT EXISTS %s (
     id INT AUTO_INCREMENT PRIMARY KEY,
     snpid varchar(25),
     mut text,
@@ -66,31 +65,22 @@ cmdtable ="""create table %s(
     chr varchar(5),
     pos text,
     window text)
-    engine=MyISAM;"""
-c.execute(cmdtable,keyword)	
-	
-	
-cmddata = """INSERT INTO %s (snpid,mut,gene,chr,pos,window) VALUES (%s,%s,"%s",%s,%s,%s) """#insertion database
-for key in data.keys():
-	print(key,data[key][1],data[key][0],data[key][2][0],data[key][2][1],data[key][3])
-	c.execute(cmddata,(keyword,key,data[key][1],data[key][0],data[key][2][0],data[key][2][1],data[key][3]))
+    engine=MyISAM;""" % (keyword)	
 
-"""create table data(
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    snpid varchar(25),
-    mut text,
-    gene text,
-    chr varchar(5),
-    pos text,
-    window text)
-    engine=MyISAM;"""
+c.execute(cmdtable)	
+	
+	
+cmddata = """INSERT INTO """+str(keyword)+""" (snpid,mut,gene,chr,pos,window) VALUES (%s,%s,"%s",%s,%s,%s) """ #insertion database
+for key in data.keys():
+	c.execute(cmddata,(key,data[key][1],data[key][0],data[key][2][0],data[key][2][1],data[key][3]))
+
+
    
-#ki="test"
-cmd = """CREATE TABLE IF NOT EXISTS %s (
+"""#ki="test"
+cmd = "CREATE TABLE IF NOT EXISTS %s (
          course  VARCHAR(15),
          student  VARCHAR(15),
          teacher VARCHAR(15),
          timeslot VARCHAR(15))
-         ENGINE=MyISAM;""" % (ki,)
-#c.execute(cmd)
-
+         ENGINE=MyISAM;" % (ki,)
+#c.execute(cmd)"""
