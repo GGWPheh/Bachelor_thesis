@@ -44,9 +44,13 @@ L =[]
 
 for i in SNP.keys():
 	L.append(i[2:])
-sys.stdout = open("/tmp/%s_snp.xml"%keyword, 'w')
-e = entrezpy.efetch.efetcher.Efetcher('efetcher','email')
-a = e.inquire({'db' : 'snp','id' : L,'retmode' : 'xml', 'rettype' : 'docset' })
+keyfile = "/tmp/%s_snp.xml"%keyword
+if not os.path.isfile(keyfile):
+	sys.stdout = open("/tmp/%s_snp.xml"%keyword, 'w')
+	e = entrezpy.efetch.efetcher.Efetcher('efetcher','email')
+	a = e.inquire({'db' : 'snp','id' : L,'retmode' : 'xml', 'rettype' : 'docset' })
+else:
+	print("SNP file Found")
 
 
 """create table data(
