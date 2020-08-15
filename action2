@@ -18,6 +18,7 @@ donnees=cgi.FieldStorage()
 idsess=donnees.getvalue("idsess")
 keyword=donnees.getvalue("keyword")
 prog=donnees.getvalue("progdef")
+sample=donnees.getvalue("fichier")
 t=shelve.open("/tmp/%s.shelf"%idsess)
 miningjob_OR_alignjob = t["miningjob_OR_alignjob"]
 keyfile = "/tmp/%s.txt"%keyword
@@ -39,7 +40,11 @@ if prog:
 		choix = "scriptA"
 	cmd="""bash %s.bat %s""" %(choix, keyword)	
 else :
-	cmd="""%s %s""" %(miningjob_OR_alignjob, keyword)
+	nf="/tmp/%s.txt"%idsess
+	dw=open(nf,"w")
+	dw.write(sample)
+	dw.close()
+	cmd="""bash %s.bat %s %s""" %(miningjob_OR_alignjob, keyword, idsess)
 
 print "je vais lancer la commande : ", cmd
 os.system("at now -f job")
