@@ -32,4 +32,3 @@ if not os.path.isfile(keyfile):
 	dwin.close()
 else :
 	alreadydone +=1
-
