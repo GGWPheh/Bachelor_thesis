@@ -17,9 +17,13 @@ if prog == "SNP" :
 	
 	cmdverif="""show tables;"""
 	c.execute(cmdverif)
+	res=c.fetchall()
 	
 	if res.count((keyword,)) :
 		print ("database already exist")
+		df=open("/tmp/flag","w")
+		df.write("flagi flago")
+		df.close()
 	
 	else :
 		w = entrezpy.conduit.Conduit('email')
@@ -30,6 +34,7 @@ if prog == "SNP" :
 		sys.stdout = open(keyfile, 'w')
 		analyzer = w.run(get_doc)
 		sys.stdout = sys.__stdout__
+		
 
 else :
 	keyword = keyword+"_data"
