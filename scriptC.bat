@@ -6,4 +6,5 @@ then
 	rm /tmp/flag
 else
 	echo "This Database already Exist !!"
+	rm /tmp/flag
 fi
