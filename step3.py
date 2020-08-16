@@ -107,15 +107,16 @@ cmdtable="""CREATE TABLE IF NOT EXISTS %s_node(
     freq INT,
     nbnode INT,
     score INT,
-    rel TEXT)
+    rel TEXT,
+    pmid TEXT)
     ENGINE=MyISAM;""" % (keyword)	
 
 c.execute(cmdtable)	
 
-cmdnode = """INSERT INTO """+str(keyword)+"""_node (name,freq,nbnode,score,rel) VALUES (%s,"%s","%s",%s,"%s") limit 3"""
+cmdnode = """INSERT INTO """+str(keyword)+"""_node (name,freq,nbnode,score,rel,pmid) VALUES (%s,"%s","%s",%s,"%s","%s") """
 for key in DFG.keys():
 	score = DFG[key]*NODE[key]
-	c.execute(cmdnode,(key,DFG[key],NODE[key],score,LienNG[key]))
+	c.execute(cmdnode,(key,DFG[key],NODE[key],score,LienNG[key],DNG[key]))
 	
 #cmdgeneid = """INSERT INTO geneid (name,rel) VALUES (%s,"%s") """
 #for key in DNG.keys():
