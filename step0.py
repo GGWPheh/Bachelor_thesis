@@ -48,6 +48,9 @@ else :
 	
 	if res.count((keyword,)) :
 		print ("database already exist")
+		df=open("/tmp/flag","w")
+		df.write("flagi flago")
+		df.close()
 	
 	else :
 		w = entrezpy.conduit.Conduit('email')
