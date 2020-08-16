@@ -6,7 +6,7 @@ then
 	make -j4
 	python ./resume.py
 	python ./step3.py $1
-	rm /tmp/flag
 else
 	echo "This Database already Exist !!"
+	rm /tmp/flag
 fi
