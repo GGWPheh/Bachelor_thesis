@@ -1,5 +1,5 @@
 python ./step0.py $1 $2
-if [ -f /tmp/flag ]
+if [ ! -f /tmp/flag ]
 then
 	python ./step1.py $1
 	python ./split.py
