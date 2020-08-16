@@ -17,48 +17,42 @@ if prog == "SNP" :
 	
 	cmdverif="""show tables;"""
 	c.execute(cmdverif)
-	res=c.fetchall()
-	verif_table=[]
-	for a in res :
-		for b in range(len(a)):
-			verif_table.append(a[b])
 	
-	if keyword in verif_table :
+	if res.count((keyword,)) :
 		print ("database already exist")
 	
 	else :
-		 w = entrezpy.conduit.Conduit('email')
+		w = entrezpy.conduit.Conduit('email')
 		get_doc = w.new_pipeline() 
 		sid = get_doc.add_search({'db' : 'pubmed', 'term' : keyword , 'rettype' : 'count'})
 		get_doc.add_fetch({'db' : 'pubmed','retmode' : 'text', 'rettype' : 'medline'}, dependency=sid)	
 		print (" PUBMED : %s  !! TELECHAREMENT EN COURS !! "%keyword)
 		sys.stdout = open(keyfile, 'w')
 		analyzer = w.run(get_doc)
+		sys.stdout = sys.__stdout__
 
 else :
+	keyword = keyword+"_data"
 	C=pymysql.connect(host="localhost",user="root",db="TFE",password="yy")
 	c=C.cursor()
 	
 	cmdverif="""show tables;"""
 	c.execute(cmdverif)
 	res=c.fetchall()
-	verif_table=[]
-	for a in res :
-		for b in range(len(a)):
-			verif_table.append(a[b])
 	
-	if keyword in verif_table :
+	
+	if res.count((keyword,)) :
 		print ("database already exist")
 	
 	else :
-		 w = entrezpy.conduit.Conduit('email')
+		w = entrezpy.conduit.Conduit('email')
 		get_doc = w.new_pipeline() 
 		sid = get_doc.add_search({'db' : 'pubmed', 'term' : keyword , 'rettype' : 'count'})
 		get_doc.add_fetch({'db' : 'pubmed','retmode' : 'text', 'rettype' : 'medline'}, dependency=sid)	
 		print (" PUBMED : %s  !! TELECHAREMENT EN COURS !! "%keyword)
 		sys.stdout = open(keyfile, 'w')
 		analyzer = w.run(get_doc)
-
+		sys.stdout = sys.__stdout__
 
 
 
