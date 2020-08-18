@@ -1,0 +1,227 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+print ("Content-type:text/html\n")
+print ()
+
+print ("<pre>")
+
+import pymysql
+import sys
+import os
+import cgi
+
+
+donnees=cgi.FieldStorage()
+# ~ cgi.print_form(donnees)
+database_choice = donnees.getvalue("database_choice")
+keyword = donnees.getvalue("Keyword")
+visu_choice = donnees.getvalue("visu_choice")
+
+# ~ try:
+	# ~ keyword.append()
+# ~ except:
+	# ~ keyword=[keyword,keyword]
+
+if isinstance(keyword,str):
+	keyword=[keyword,keyword,keyword]
+	
+	
+
+if database_choice == "SNP":
+	cmdselect = """ select * from %s """%(keyword[0])
+	C=pymysql.connect(host="localhost",user="root",db="SNP",password="yy")
+	c=C.cursor()
+	c.execute(cmdselect)
+	res = c.fetchall()
+	for l in res:
+		print(l)
+elif database_choice == "GENE":
+	# ~ FAIRE ATTENTION DE PAS REGARDER LES DATA EN AYANT COCHE DIAGRAM
+	if (visu_choice != "Diagram"):
+		if "_node" in keyword[1]: cmdselect = """ select * from %s order by score desc"""%(keyword[1])
+		else: cmdselect = """ select * from %s"""%(keyword[1])
+		print ("""<form name="form3" action="find.cgi" method=post enctype="multipart/form-data"><input type="text" name="gene_query" placeholder = "TP53"><input type="hidden" id="keyword" name="keyword" value="%s"><input type="Submit" value="Envoyer"></form>"""%keyword[1])
+		# ~ print ("""<form name="form3" action="find.cgi" method=post enctype="multipart/form-data"><input type="text" name="gene_query" placeholder = "TP53"><a href="find.cgi?gene_query="><input type="button" value="Envoyer"></a>""")
+		C=pymysql.connect(host="localhost",user="root",db="GENE",password="yy")
+		c=C.cursor()
+		c.execute(cmdselect)
+		res = c.fetchall()
+		for l in res:
+			print(l)
+	else:
+		C=pymysql.connect(host="localhost",user="root",db="GENE",password="yy")
+		c=C.cursor()
+		# ~ cmd="""select name,rel from node1 where nbnode != 0 order by name limit 5"""
+		cmd="""select name,rel from %s order by score desc"""%(keyword[1])
+		cmdif="""select freq,score,nbnode from %s order by score desc"""%(keyword[1])
+		c.execute(cmd)
+		r=c.fetchall()
+		res=[]
+		filename = "/tmp/%s_chorddata.json"%keyword[1]
+		df = open(filename,"w")
+		
+		c.execute(cmdif)
+		rnb = c.fetchall()
+		df.write("[")
+		for elem in r:
+			t = elem[1]
+			t=t.split("'")[1:-1]
+			if ',' in t:
+				while ',' in t:
+					t.remove(',')
+			res.append([elem[0],t])
+			
+		for name,fsn in zip(res,rnb):
+			df.write("{\"name\":\"")
+			df.write (name[0])
+			df.write ("\"")
+			df.write (",\"freq\":")
+			df.write (str(fsn[0]))
+			df.write (",\"score\":")
+			df.write (str(fsn[1]))
+			df.write (",\"nbnode\":")
+			df.write (str(fsn[2]))
+			df.write (",\"imports\":[")
+			for i in name[1]:
+				df.write ("\"")
+				df.write (i)
+				if i == name[1][-1]:
+					df.write ("\"")
+				else:
+					df.write ("\",")
+			df.write ("]},")
+		pos=df.tell()-1
+		df.seek(pos)
+		df.write("]")
+		
+		df.close()
+		
+		
+		print ("""<a href="%s"><input type="button" value="Download .json file"></a>"""%(filename))
+		print ("""<a href="view.cgi"><input type="button" value="Visualiser"></a>""")
+elif database_choice == "EPI":
+	if (visu_choice != "Diagram"):
+		if "_node" in keyword[2]: cmdselect = """ select * from %s order by score desc"""%(keyword[2])
+		else: cmdselect = """ select * from %s"""%(keyword[2])
+		# ~ print ("""<input type="Reset" value="Reinitialiser les valeurs">""")
+		C=pymysql.connect(host="localhost",user="root",db="EPI",password="yy")
+		c=C.cursor()
+		c.execute(cmdselect)
+		res = c.fetchall()
+		for l in res:
+			print(l)
+	else:
+		C=pymysql.connect(host="localhost",user="root",db="EPI",password="yy")
+		c=C.cursor()
+		# ~ cmd="""select name,rel from node1 where nbnode != 0 order by name limit 5"""
+		cmd="""select name,rel from %s order by score desc"""%(keyword[2])
+		cmdif="""select freq,score,nbnode from %s order by score desc"""%(keyword[2])
+		c.execute(cmd)
+		r=c.fetchall()
+		res=[]
+		filename = "/tmp/epi_%s_chorddata.json"%keyword[1]
+		df = open(filename,"w")
+		
+		c.execute(cmdif)
+		rnb = c.fetchall()
+		df.write("[")
+		for elem in r:
+			t = elem[1]
+			t=t.split("'")[1:-1]
+			if ',' in t:
+				while ',' in t:
+					t.remove(',')
+			res.append([elem[0],t])
+			
+		for name,fsn in zip(res,rnb):
+			df.write("{\"name\":\"")
+			df.write (name[0])
+			df.write ("\"")
+			df.write (",\"freq\":")
+			df.write (str(fsn[0]))
+			df.write (",\"score\":")
+			df.write (str(fsn[1]))
+			df.write (",\"nbnode\":")
+			df.write (str(fsn[2]))
+			df.write (",\"imports\":[")
+			for i in name[1]:
+				df.write ("\"")
+				df.write (i)
+				if i == name[1][-1]:
+					df.write ("\"")
+				else:
+					df.write ("\",")
+			df.write ("]},")
+		pos=df.tell()-1
+		df.seek(pos)
+		df.write("]")
+		
+		df.close()
+		
+		
+		print ("""<a href="%s"><input type="button" value="Download .json file"></a>"""%(filename))
+		print ("""<a href="view.cgi"><input type="button" value="Visualiser"></a>""")		
+	
+else:
+	cmd ="""python compare_result.py %s"""%(keyword[3])
+	os.system(cmd)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	
+	
+	
+	
+	# ~ C=pymysql.connect(host="localhost",user="root",db="FinalData2",password="yy")
+	# ~ c=C.cursor()
+	
+	# ~ x=''
+	# ~ gene= sys.argv[1]
+	# ~ IMP= ["ISQL-","PMID-","DP  -","TI  -","AB  -","OAB -","FAU -","PL  -","OT  -"]
+	
+	# ~ cmd = """select rel from geneid where name = %s"""
+	# ~ nb = c.execute(cmd,gene)
+	# ~ if nb:
+		# ~ res, = c.fetchall()
+		# ~ for t in res:
+			# ~ allpmid = t.split("'")[1:-1]
+			# ~ if ',' in allpmid:
+				# ~ while ',' in allpmid:
+					# ~ allpmid.remove(',')
+			# ~ w = t.split("'")[1]
+		# ~ ## ~ print("Le gene :",gene,"se trouve dans",len(allpmid),"articles.")
+		# ~ print("The gene :",gene,"can be found in",len(allpmid),"articles.")
+		# ~ cgrep = """grep %s ./gene.usefull"""%gene
+		# ~ dc = os.popen(cgrep)
+		# ~ res=dc.readline()
+		# ~ res=res.strip().split()[1:]
+		# ~ for i in res:
+			# ~ x += i+' '
+		# ~ ## ~ print("Les alias détectés sont : ",x)
+		# ~ print("The aliases detected for this gene : ",x)
+		# ~ input()
+		# ~ for w in allpmid:
+			# ~ cmd = """select * from data where pmid = %s """
+			# ~ c.execute(cmd,w)
+			# ~ res, = c.fetchall()
+			# ~ print("---- ----- ----- ---- ---- ---- ----")
+			# ~ for x,y in enumerate(res):
+				# ~ print(IMP[x],y)
+	# ~ else:
+		# ~ ## ~ print("Le gene :",gene,"n'existe pas dans la database")
+		# ~ print("This gene :",gene,"doesn't appear in your database!!")
+		
+	

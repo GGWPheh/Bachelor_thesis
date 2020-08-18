@@ -1,0 +1,10 @@
+/opt/bwa-0.7.17/bwa index /tmp/$1_window.txt
+/opt/bwa-0.7.17/bwa mem -t 4 /tmp/$1_window.txt /tmp/$2.txt>/tmp/output.sam
+/opt/samtools-1.9/samtools view -S -b /tmp/output.sam >/tmp/output.bam
+/opt/samtools-1.9/samtools sort -o /tmp/aligned.bam /tmp/output.bam 
+/opt/bcf/bcftools/bcftools mpileup -O b -o /tmp/bla.bcf -f /tmp/$1_window.txt /tmp/aligned.bam 
+/opt/bcf/bcftools/bcftools call --ploidy 1 -m -v -o /tmp/$2.vcf /tmp/bla.bcf
+#/opt/bcf/bcftools/misc/vcfutils.pl varFilter /tmp/$2.vcf 
+
+
+
