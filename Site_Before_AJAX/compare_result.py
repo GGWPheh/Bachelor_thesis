@@ -46,7 +46,11 @@ if len(gene_snp) < len(gene_gene) :
 else :
 	Final_res=pourcentage/len(gene_snp)
 	
-print (Final_res*100)
+print ("La liste des genes avec SNP research : ","						","La liste des genes avec Gene research : ")
+for a in gene_snp :
+	for b in gene_gene :
+		print (a,"						",b)
+print ("Pourcentage de similarités entre les deux listes : ",Final_res*100)
 # ~ print(gene_gene)
 # ~ print("----------")
 # ~ print(gene_snp)
