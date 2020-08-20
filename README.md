@@ -12,7 +12,7 @@ Si vous voulez utiliser le site, voici les étapes a réaliser :
 
 -Le dossier TFE doit se trouver dans le dossier /var/www/localhost/htdocs/TFE 
 
--Pour lancer la partie Alignement du site, il faut télécharger le génome humain chromosome par chromosome et enregister les fichiers de la manière suivante : "1.fasta =chromosome 1 / 2.fasta = chromosome 2 / ...". Tout ses fichiers devront se trouver dans le dossier /opt/dossier_site. 
+-Pour lancer la partie Alignement du site, il faut télécharger le génome humain chromosome par chromosome et enregister les fichiers de la manière suivante : "1.fasta =chromosome 1 / 2.fasta = chromosome 2 / ...". Tout ses fichiers devront se trouver dans le dossier /opt/dossier_site. Les fichiers fasta doivent être écrit comme le fichier exemple.fasta
 
 -Et pour finir, il faut créer les databases SNP,GENE et EPI en donnant les privileges a apache.
 
