@@ -8,9 +8,9 @@ Si vous voulez utiliser le site, voici les étapes a réaliser :
 
 -Installer le module python entrezpy
 
--Télécharger tout les fichiers de /TFEwebsite/Final_Website (exepté le dossier JS_CSS et Screenshots) et les placer dans un dossier /opt/dossier_site qui puisse être utilisé par apache. 
+-Télécharger tout les fichiers de /TFEwebsite/Final_Website (exepté le dossier TFE et Screenshots) et les placer dans un dossier /opt/dossier_site qui puisse être utilisé par apache. 
 
--Le dossier JS_CSS doit se trouver dans le dossier /var/www/localhost/htdocs/TFE 
+-Le dossier TFE doit se trouver dans le dossier /var/www/localhost/htdocs/TFE 
 
 -Pour lancer la partie Alignement du site, il faut télécharger le génome humain chromosome par chromosome et enregister les fichiers de la manière suivante : "1.fasta =chromosome 1 / 2.fasta = chromosome 2 / ...". Tout ses fichiers devront se trouver dans le dossier /opt/dossier_site. 
 
