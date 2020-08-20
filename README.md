@@ -21,8 +21,16 @@ Si vous voulez utiliser le site, voici les étapes a réaliser :
 TACHES NECESSAIRE :
 
 -queue
+-bouton circle
 
 IDEES D'AMELIORATION :
 
 -Limiter les keyword sur une fourchette de lettre, ex : min 3 ltr => max 25 ltr
 J'ai fais un test, mon prog bug quand le keyword contient "-" du coup faudrait empecher l'utilisateur de rentrer des caractères spéciaux
+
+-Remettre les valeurs zero lorsque qu'on clique sur réinitialiser.
+
+-Ajout une bande de chargement
+
+
+
