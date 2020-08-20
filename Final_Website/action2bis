@@ -1,0 +1,204 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+print ("Content-type:text/html\n")
+print ()
+print ("""<link rel= "stylesheet" type= "text/css" href="/TFE/Interface.css" />""")
+print ("<pre>")
+
+print ("""<body>""")
+print ("""<div class="miseenpage">""")
+
+import pymysql
+import sys
+import os
+import cgi
+
+
+donnees=cgi.FieldStorage()
+# ~ cgi.print_form(donnees)
+database_choice = donnees.getvalue("database_choice")
+keyword = donnees.getvalue("Keyword")
+visu_choice = donnees.getvalue("visu_choice")
+
+def data_print(y,k):
+	if y =="SNP":IMP= ["ISQL-","SNPID-","MUT  -","GENE -","CHR  -","POS  -","WIND -"]
+	if y =="GENE":IMP= ["ISQL-","PMID-","DP  -","TI  -","AB  -","OAB -","FAU -","PL  -","OT  -"]
+	if y =="EPI":IMP= ["ISQL-","GENE -","FREQ -","NODE -","SCOR -","REL  -","PMID -" ]
+	cmd = """select * from """+str(k)
+	c.execute(cmd)
+	res = c.fetchall()
+	print("---- ----- ----- ---- ---- ---- ----")
+	for elem in res:
+		for x,y in enumerate(elem):
+			y=str(y)
+			nb_loop = len(y)//115 + 1
+			for i in range(nb_loop):
+				if i == 0:print(IMP[x], end="")
+				print(y[i*115:(i+1)*115])			
+		print("---- ----- ----- ---- ---- ---- ----")
+
+
+if isinstance(keyword,str):
+	keyword=[keyword,keyword,keyword]
+
+
+if database_choice == "SNP":
+	# ~ cmdselect = """ select * from %s """%(keyword[0])
+	C=pymysql.connect(host="localhost",user="root",db="SNP",password="yy")
+	c=C.cursor()
+	data_print(database_choice,keyword[0])
+	# ~ c.execute(cmdselect)
+	# ~ res = c.fetchall()
+	# ~ for l in res:
+		# ~ print(l)
+elif database_choice == "GENE":
+
+	if isinstance(visu_choice,list):
+		visu_choice=visu_choice[0]
+		
+	if (visu_choice != "Diagram"):
+		# ~ if "_node" in keyword[1]: cmdselect = """ select * from %s order by score desc"""%(keyword[1])
+		# ~ else: cmdselect = """ select * from %s"""%(keyword[1])
+		
+		print ("""<form name="form3" action="find.cgi" method=post enctype="multipart/form-data"><input type="text" name="gene_query" placeholder = "TP53"><input type="hidden" id="keyword" name="keyword" value="%s"><input type="Submit" value="Envoyer"></form>"""%keyword[1])
+		# ~ print ("""<form name="form3" action="find.cgi" method=post enctype="multipart/form-data"><input type="text" name="gene_query" placeholder = "TP53"><a href="find.cgi?gene_query="><input type="button" value="Envoyer"></a>""")
+		C=pymysql.connect(host="localhost",user="root",db="GENE",password="yy")
+		c=C.cursor()
+		data_print(database_choice,keyword[1])
+		# ~ c.execute(cmdselect)
+		# ~ res = c.fetchall()
+		# ~ for l in res:
+			# ~ print(l)
+	else:
+		C=pymysql.connect(host="localhost",user="root",db="GENE",password="yy")
+		c=C.cursor()
+		# ~ cmd="""select name,rel from node1 where nbnode != 0 order by name limit 5"""
+		cmd="""select name,rel from %s order by score desc"""%(keyword[1])
+		cmdif="""select freq,score,nbnode from %s order by score desc"""%(keyword[1])
+		c.execute(cmd)
+		r=c.fetchall()
+		res=[]
+		filename = "/tmp/%s_chorddata.json"%keyword[1]
+		df = open(filename,"w")
+		
+		c.execute(cmdif)
+		rnb = c.fetchall()
+		df.write("[")
+		for elem in r:
+			t = elem[1]
+			t=t.split("'")[1:-1]
+			if ',' in t:
+				while ',' in t:
+					t.remove(',')
+			res.append([elem[0],t])
+			
+		for name,fsn in zip(res,rnb):
+			df.write("{\"name\":\"")
+			df.write (name[0])
+			df.write ("\"")
+			df.write (",\"freq\":")
+			df.write (str(fsn[0]))
+			df.write (",\"score\":")
+			df.write (str(fsn[1]))
+			df.write (",\"nbnode\":")
+			df.write (str(fsn[2]))
+			df.write (",\"imports\":[")
+			for i in name[1]:
+				df.write ("\"")
+				df.write (i)
+				if i == name[1][-1]:
+					df.write ("\"")
+				else:
+					df.write ("\",")
+			df.write ("]},")
+		pos=df.tell()-1
+		df.seek(pos)
+		df.write("]")
+		
+		df.close()
+		
+		
+		# ~ print ("""<a href="%s"><input type="button" value="Download .json file"></a>"""%(filename))
+		print ("""<a href="view.cgi"><input type="button" value="Visualiser"></a>""")
+elif database_choice == "EPI":
+	if isinstance(visu_choice,list):
+		visu_choice=visu_choice[0]
+	if (visu_choice != "Diagram"):
+		# ~ if "_node" in keyword[2]: cmdselect = """ select * from %s order by score desc"""%(keyword[2])
+		# ~ else: cmdselect = """ select * from %s"""%(keyword[2])
+		# ~ print ("""<input type="Reset" value="Reinitialiser les valeurs">""")
+		C=pymysql.connect(host="localhost",user="root",db="EPI",password="yy")
+		c=C.cursor()
+		data_print(database_choice,keyword[2])
+		# ~ c.execute(cmdselect)
+		# ~ res = c.fetchall()
+		# ~ for l in res:
+			# ~ print(l)
+	else:
+		C=pymysql.connect(host="localhost",user="root",db="EPI",password="yy")
+		c=C.cursor()
+		# ~ cmd="""select name,rel from node1 where nbnode != 0 order by name limit 5"""
+		cmd="""select name,rel from %s order by score desc"""%(keyword[2])
+		cmdif="""select freq,score,nbnode from %s order by score desc"""%(keyword[2])
+		c.execute(cmd)
+		r=c.fetchall()
+		res=[]
+		filename = "/tmp/epi_%s_chorddata.json"%keyword[1]
+		df = open(filename,"w")
+		
+		c.execute(cmdif)
+		rnb = c.fetchall()
+		df.write("[")
+		for elem in r:
+			t = elem[1]
+			t=t.split("'")[1:-1]
+			if ',' in t:
+				while ',' in t:
+					t.remove(',')
+			res.append([elem[0],t])
+			
+		for name,fsn in zip(res,rnb):
+			df.write("{\"name\":\"")
+			df.write (name[0])
+			df.write ("\"")
+			df.write (",\"freq\":")
+			df.write (str(fsn[0]))
+			df.write (",\"score\":")
+			df.write (str(fsn[1]))
+			df.write (",\"nbnode\":")
+			df.write (str(fsn[2]))
+			df.write (",\"imports\":[")
+			for i in name[1]:
+				df.write ("\"")
+				df.write (i)
+				if i == name[1][-1]:
+					df.write ("\"")
+				else:
+					df.write ("\",")
+			df.write ("]},")
+		pos=df.tell()-1
+		df.seek(pos)
+		df.write("]")
+		
+		df.close()
+		
+		
+		# ~ print ("""<a href="%s"><input type="button" value="Download .json file"></a>"""%(filename))
+		print ("""<a href="view.cgi"><input type="button" value="Visualiser"></a>""")		
+	
+else:
+	cmd ="""python compare_result.py %s"""%(keyword[3])
+	os.system(cmd)
+
+
+
+	
+	
+	
+print ("""</div>""")
+print ("""</body>""")
+print ("""	<footer>
+		Mentions legales<br>
+		&copy; Copyright <b>DOM - Database Of Mining</b> 2020	<br>
+		Projet realise en fin de cycle de bachelier dans le but d'obtenir mon diplome en Bio-Informatiquen. Realise par <strong>Ahmed KANFOUD et Cyril RADERMECKER</strong>.
+	</footer>""")

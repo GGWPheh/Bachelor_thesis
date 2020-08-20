@@ -1,0 +1,143 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+print "Content-type:text/html\n"
+print
+print """<script src=/TFE/malib.js></script>
+	<br>"""
+print """<link rel= "stylesheet" type= "text/css" href="/TFE/Interface.css" />"""
+print "<pre>"
+
+print """<body>"""
+print """<div class="miseenpage">"""
+
+
+
+import cgi
+import os
+import uuid
+import shelve
+
+from malib import *
+
+idsess=uuid.uuid1()
+donnees=cgi.FieldStorage()
+
+# ~ cgi.print_form(donnees)
+
+action_job = donnees.getvalue("action")
+
+snp_table=[]
+gene_table=[]
+epi_table=[]
+compare_gene=[]
+
+cmdverif="""show tables;"""
+C=pymysql.connect(host="localhost",user="root",db="SNP",password="yy")
+c=C.cursor()
+c.execute(cmdverif)
+res=c.fetchall()
+for a in res :
+	for b in range(len(a)):
+		snp_table.append(a[b])
+		
+C=pymysql.connect(host="localhost",user="root",db="GENE",password="yy")
+c=C.cursor()
+c.execute(cmdverif)
+res=c.fetchall()
+for a in res :
+	for b in range(len(a)):
+		gene_table.append(a[b])
+		compare_gene.append(a[b][:-5])
+		
+C=pymysql.connect(host="localhost",user="root",db="EPI",password="yy")
+c=C.cursor()
+c.execute(cmdverif)
+res=c.fetchall()
+for a in res :
+	for b in range(len(a)):
+		epi_table.append(a[b])
+compare_table =[]
+for i in set(compare_gene):
+	for y in snp_table:
+		if i == y:
+			compare_table.append(i)
+
+
+
+if (action_job) == "usingjob" :
+	print """<form name="form2" action="action2" method=post enctype="multipart/form-data">"""
+	print """<input type="radio" id="Ahril" onchange="toggle('ALI','EPI')" name="data_using" value="Alignement" checked >Alignement :<p class="ALI">Database : <select name="keyword">"""
+	# ~ print "Choissez une database :"
+	for i in range(len(snp_table)):
+		print """<option value="%s">%s</option>"""%(snp_table[i],snp_table[i])
+	print """</select>	Insert your SAMPLE <input type="file" name="fichier"></p>"""
+	
+	print """<input type="radio" id="Ahril" onchange="toggle('EPI','ALI')" name="data_using" value="Epigenetic">Epigenetic research :<p class="EPI">Database : <select name="keyword">"""
+	for i in range(len(gene_table)):
+		if "_data" in gene_table[i]:
+			print """<option value="%s">%s</option>"""%(gene_table[i],gene_table[i])
+	print """</select>	Les mots <input type="text" name="epi_query" placeholder = "SYNTAXE : word1,word2,word3,..."></p>"""
+		
+	print """<input type="hidden" id="idsess" name="idsess" value="%s">"""%idsess
+	
+	findeformulaire()
+	
+elif (action_job) == "miningjob" :
+	print """<form name="form2" action="action2" method=post enctype="multipart/form-data">"""
+	print "Choissez un mot cle :"
+	print """<input type="text" name="keyword" placeholder= "FILL THIS BOX">"""
+	print "Choissez un programme :"
+	print """
+	<input type="radio" id="ahmed" name="data_mining" value="Gene"> Gene research
+	<input type="radio" id="cyril" name="data_mining"  value="SNP" checked> SNP research"""
+	print """<input type="hidden" id="idsess" name="idsess" value="%s">"""%idsess
+	findeformulaire()
+	
+else:
+	print """<form name="form3" action="action2bis" method=post enctype="multipart/form-data">"""
+	
+	
+	
+	
+	print """<input type="radio" name="database_choice" onchange="toggle('SNP','GENE','EPI','compare')" value="SNP" checked> SNP DataBase : <p class="SNP">Keyword : <select name="Keyword">"""
+	for i in range(len(snp_table)):
+				print """<option value="%s">%s</option>"""%(snp_table[i],snp_table[i])
+	print """</select> </p>"""	
+	
+	
+	print """<input type="radio" name="database_choice" onchange="toggle('GENE','SNP','EPI','compare')" value="GENE" > GENE DataBase : <p class="GENE">Keyword : <select id ="2" onchange="d()" name="Keyword">"""
+	for i in range(len(gene_table)-1,-1,-1):
+				print """<option value="%s">%s</option>"""%(gene_table[i],gene_table[i])
+	print """</select>  <input type="checkbox"  class="1" name="visu_choice"  value="Diagram" > Diagram</p> """	
+	
+	
+	print """<input type="radio" name="database_choice" onchange="toggle('EPI','GENE','SNP','compare')" value="EPI"> EPI DataBase : <p class="EPI">Keyword : <select name="Keyword">"""
+	for i in range(len(epi_table)):
+			print """<option value="%s">%s</option>"""%(epi_table[i],epi_table[i])
+	print """</select>  <input type="checkbox" class="1" name="visu_choice"  value="Diagram" > Diagram </p>  """	
+	
+	
+	print """<input type="radio" name="database_choice" onchange="toggle('compare','GENE','EPI','SNP')" value="compare"> Compare Result : <p class="compare">Keyword : <select name="Keyword">"""
+	for i in range(len(compare_table)):
+			print """<option value="%s">%s</option>"""%(compare_table[i],compare_table[i])
+	print """</select>  <input type="checkbox" id="ahmed" name="visu_choice"  value="Circle" > Circle </p>"""	
+	
+	
+	print """<input type="hidden" id="idsess" name="idsess" value="%s">"""%idsess
+	findeformulaire()
+	
+
+
+
+
+t=shelve.open("/tmp/%s.shelf"%idsess)
+t["id"]=idsess
+
+
+print """</div>"""
+print """</body>"""
+print """	<footer>
+		Mentions legales<br>
+		&copy; Copyright <b>DOM - Database Of Mining</b> 2020	<br>
+		Projet realise en fin de cycle de bachelier dans le but d'obtenir mon diplome en Bio-Informatiquen. Realise par <strong>Ahmed KANFOUD et Cyril RADERMECKER</strong>.
+	</footer>"""

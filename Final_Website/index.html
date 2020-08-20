@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>MouseOver Chord Diagram</title>
+<link rel="stylesheet" type="text/css" href="/TFE/Interface.css">
+<body>
+<div class="miseenpage2">
+<div id="observablehq-9af783c6">
+  <div class="observablehq-Number_Of_Gene"></div>
+  <div class="observablehq-viewof-flag"></div>
+  <div class="observablehq-viewof-min_score"></div>
+  <div class="observablehq-viewof-file"></div>
+  <div class="observablehq-chart"></div>
+</div>
+</div>
+
+<script type="module">
+  import {Runtime, Inspector} from "https://cdn.jsdelivr.net/npm/@observablehq/runtime@4/dist/runtime.js";
+  import define from "https://api.observablehq.com/@zehams/chord-like-diagram-visualization-interface.js?v=3";
+  (new Runtime).module(define, name => {
+    if (name === "Number_Of_Gene") return Inspector.into("#observablehq-9af783c6 .observablehq-Number_Of_Gene")();
+    if (name === "viewof flag") return Inspector.into("#observablehq-9af783c6 .observablehq-viewof-flag")();
+    if (name === "viewof min_score") return Inspector.into("#observablehq-9af783c6 .observablehq-viewof-min_score")();
+    if (name === "viewof file") return Inspector.into("#observablehq-9af783c6 .observablehq-viewof-file")();
+    if (name === "chart") return Inspector.into("#observablehq-9af783c6 .observablehq-chart")();
+  });
+</script>
+ 
+ </body>
+ <pre>
+ 	<footer>
+		Mentions légales<br>
+		&copy; Copyright <b>DOM - Database Of Mining</b> 2020	<br>
+		Projet réalisé en fin de cycle de bachelier dans le but d'obtenir mon diplome en Bio-Informatiquen. Réalisé par <strong>Ahmed KANFOUD et Cyril RADERMECKER</strong>.
+	</footer>
+</pre>

@@ -1,0 +1,88 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+print"Content-type:text/html\n"
+print
+print """<link rel= "stylesheet" type= "text/css" href="/TFE/Interface.css" />"""
+print"<pre>"
+
+print """<body>"""
+print """<div class="miseenpage">"""
+
+import cgi
+import os
+import uuid
+import shelve
+import pymysql
+import time
+import sys
+
+donnees=cgi.FieldStorage()
+# ~ cgi.print_form(donnees)
+
+idsess=donnees.getvalue("idsess")
+keyword=donnees.getvalue("keyword")
+mining_prog=donnees.getvalue("data_mining")
+using_prog=donnees.getvalue("data_using")
+sample=donnees.getvalue("fichier")
+epi_query =donnees.getvalue("epi_query")
+ 
+
+
+
+t=shelve.open("/tmp/%s.shelf"%idsess)
+keyfile = "/tmp/%s.txt"%keyword
+
+
+
+
+
+
+	
+if mining_prog:
+	if mining_prog == "SNP":
+		choix = "scriptC"
+	else:
+		choix = "scriptA"
+	cmd="""bash %s.bat %s %s""" %(choix, keyword, mining_prog)	
+elif using_prog :
+	if isinstance(keyword,str):
+		keyword=[keyword,keyword]
+	if using_prog == "Alignement":
+		alignjob = "alignjob"
+		nf="/tmp/%s.txt"%idsess
+		dw=open(nf,"w")
+		dw.write(sample)
+		dw.close()
+		cmd="""bash %s.bat %s %s""" %(alignjob, keyword[0], idsess)
+	else:
+		nf="/tmp/epigene.%s.usefull"%keyword[1]
+		query_splitted = epi_query.split(",")
+		print(query_splitted)
+		dw=open(nf,"w")
+		for elem in query_splitted:
+			dw.write(elem)
+			dw.write(" ")
+			dw.write(elem)
+			dw.write("\n")
+		dw.close()
+		cmd="""python EPIstep3.py %s"""%(keyword[1])
+		
+
+# ~ print "je vais lancer la commande : ", cmd
+# ~ os.system("at now -f job")
+os.system(cmd)
+if using_prog != "Alignement":
+	print """
+	<script>
+	window.location="/TFEwebsite/index.cgi"
+	</script>
+	"""
+	
+
+print """</div>"""
+print """</body>"""
+print """	<footer>
+		Mentions legales<br>
+		&copy; Copyright <b>DOM - Database Of Mining</b> 2020	<br>
+		Projet realise en fin de cycle de bachelier dans le but d'obtenir mon diplome en Bio-Informatiquen. Realise par <strong>Ahmed KANFOUD et Cyril RADERMECKER</strong>.
+	</footer>"""

@@ -1,0 +1,132 @@
+/*
+body
+*/
+/*
+{
+background-image:url("background.jpeg");
+background-repeat:no-repeat;
+background-attachment:fixed;
+background-size: cover;
+margin:0;
+}
+*/
+.logoacc
+{
+	position:relative;
+	left:280px;
+	background-color: rgb(155, 187, 206, 0.75);
+	margin-left: 20%;
+	margin-right: 20%;
+	border-radius:10px;
+	padding-left:55px;
+	padding-right:45px;
+
+}
+.miseenpage
+{
+	background-color: rgb(155, 187, 206, 0.75);
+	width:880px;
+	margin-left: 20%;
+	margin-right: 20%;
+	margin-bottom: 5%;
+	padding-left:40px;
+	padding-right:40px;
+	padding-bottom:20px;
+	border-radius:7px;
+
+}
+#endroit
+{
+	background-color: rgb(92, 111, 122, 0.85);
+	border-radius:7px;
+}
+
+nav ul 
+{	
+	position:relative top;
+	display:block;
+	width:920px;
+	border-radius:5px;
+	margin-left:20%;
+	margin-right:20%;
+	list-style-type:none;
+	background-color: rgb(155, 187, 206, 0.75);
+}
+nav li
+{
+	display:inline-block;
+	width:170px;
+	height:40px;
+	margin:0px;
+	border-radius:7px;
+	padding:0px;
+	border:1px solid #b8cad6;
+	text-align:center;
+	line-height:40px;
+}
+nav li :hover{								
+	background-color:#273d4d;
+	border-radius:7px;
+}
+nav li a
+{
+	display:block;
+	text-decoration:none;
+	color:black;
+}
+#logo 
+{
+	position:fixed;
+	float:left;		
+	top:5px;
+	left:5px;
+}
+.connection 
+{
+	width:650px;
+	margin:auto;
+	margin-top:60px;
+	padding:50px 70px;
+	/*background-color: rgb(92, 111, 122, 0.55);*/
+	background-color: rgb(255, 255, 255, 0.25);
+	border-radius:7px;
+ 
+}
+footer
+{
+	text-align:center;
+	color:#2d2d2d;
+	padding-top:30px;
+	padding-bottom:20px;
+	font-size:.9em;
+	margin:auto;
+	width:100%
+}
+a
+{
+	color:black;
+}
+input:hover
+{
+	background-color:rgba(173,197,215,.8);
+	border-radius:7px;
+}
+td
+{
+	border:3px solid #b8cad6;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
